@@ -5,10 +5,6 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f8f8'
   },
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f8f8'
-  },
   searchContainer: {
     backgroundColor: '#D32F2F',
     padding: 16,
@@ -17,14 +13,34 @@ export default StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     width: '100%',
-    zIndex: 1
+    zIndex: 1,
+    position: 'relative'
   },
   searchInput: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingHorizontal: 16,
     height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingRight: 40,
     fontSize: 16
+  },
+  clearButton: {
+    position: 'absolute',
+    right: 24,
+    top: 18,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  clearButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold'
   },
   listContainer: {
     paddingHorizontal: 8,
@@ -70,5 +86,21 @@ export default StyleSheet.create({
     bottom: 20,
     right: 20,
     backgroundColor: '#D32F2F'
+  },
+  headerContainer: {
+    backgroundColor: '#D32F2F',
+    padding: 16,
+    alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    letterSpacing: 1
   }
 });

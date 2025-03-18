@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState } from 'react';
 import {
   View,
   FlatList,
@@ -6,7 +6,6 @@ import {
   ActivityIndicator,
   Text,
   SafeAreaView,
-  RefreshControl,
   StatusBar,
   TouchableOpacity
 } from 'react-native';
@@ -14,9 +13,10 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { usePokemon } from '../hooks/usePokemon';
 import { PokemonCard } from './PokemonCard';
-import { FAB } from 'react-native-paper';
 import { RootStackParamList } from '../types/pokemonTypes';
 import styles from '../styles/PokemonScreen.styles';
+import { Pagination } from './Pagination';
+import { EmptyState } from './EmptyState';
 
 type PokemonScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -25,23 +25,28 @@ type PokemonScreenNavigationProp = StackNavigationProp<
 
 const PokemonScreen: React.FC = () => {
   const navigation = useNavigation<PokemonScreenNavigationProp>();
-  const { pokemons, fetchPokemons, loading, error } = usePokemon();
+  const {
+    pokemonList,
+    allPokemonList,
+    loading,
+    error,
+    currentPage,
+    totalPages,
+    nextPage,
+    previousPage,
+    setCurrentPage
+  } = usePokemon();
   const [search, setSearch] = useState('');
-  const [refreshing, setRefreshing] = useState(false);
 
-  const filteredPokemons = pokemons.filter(
-    (pokemon) =>
-      pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
-      pokemon.id.toString().includes(search)
-  );
+  const filteredPokemons = search.trim()
+    ? allPokemonList.filter(
+        (pokemon) =>
+          pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
+          pokemon.id.toString().includes(search)
+      )
+    : pokemonList;
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await fetchPokemons();
-    setRefreshing(false);
-  }, [fetchPokemons]);
-
-  if (loading && !refreshing) {
+  if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#D32F2F" />
@@ -54,9 +59,6 @@ const PokemonScreen: React.FC = () => {
     return (
       <SafeAreaView style={styles.errorContainer}>
         <Text style={styles.errorText}>{error}</Text>
-        <TouchableOpacity style={styles.retryButton} onPress={fetchPokemons}>
-          <Text style={styles.retryButtonText}>Retry</Text>
-        </TouchableOpacity>
       </SafeAreaView>
     );
   }
@@ -64,17 +66,33 @@ const PokemonScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor="#D32F2F" barStyle="light-content" />
-      <View style={styles.container}>
-        <View style={styles.searchContainer}>
-          <TextInput
-            placeholder="Search Pokémon by name or number"
-            value={search}
-            onChangeText={setSearch}
-            style={styles.searchInput}
-            placeholderTextColor="#999"
-          />
-        </View>
-
+      <TouchableOpacity
+        style={styles.headerContainer}
+        onPress={() => {
+          setSearch('');
+          navigation.navigate('PokemonScreen');
+        }}
+      >
+        <Text style={styles.headerTitle}>Pokédex</Text>
+      </TouchableOpacity>
+      <View style={styles.searchContainer}>
+        <TextInput
+          placeholder="Search Pokémon by name or number"
+          value={search}
+          onChangeText={setSearch}
+          style={styles.searchInput}
+          placeholderTextColor="#999"
+        />
+        {search.length > 0 && (
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={() => setSearch('')}
+          >
+            <Text style={styles.clearButtonText}>✕</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      {filteredPokemons.length > 0 ? (
         <FlatList
           data={filteredPokemons}
           keyExtractor={(item) => item.id.toString()}
@@ -88,26 +106,25 @@ const PokemonScreen: React.FC = () => {
           )}
           numColumns={2}
           contentContainerStyle={styles.listContainer}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={['#D32F2F']}
-            />
-          }
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
           initialNumToRender={8}
           maxToRenderPerBatch={10}
           windowSize={10}
         />
+      ) : (
+        <EmptyState />
+      )}
 
-        <FAB
-          icon="refresh"
-          onPress={fetchPokemons}
-          style={styles.fab}
-          color="white"
+      {!search && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onFirstPage={() => setCurrentPage(0)}
+          onPreviousPage={previousPage}
+          onNextPage={nextPage}
+          onLastPage={() => setCurrentPage(totalPages - 1)}
         />
-      </View>
+      )}
     </SafeAreaView>
   );
 };

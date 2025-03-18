@@ -11,7 +11,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemon,
   onPress
 }) => {
-  const mainType = pokemon.types[0]?.type.name || 'normal';
+  const mainType = pokemon.types[0] || 'normal';
   const cardBackgroundColor = `${getTypeColor(mainType)}40`;
 
   return (
@@ -20,9 +20,10 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         style={styles.cardTouchable}
         onPress={onPress}
         activeOpacity={0.7}
+        testID="pokemon-card"
       >
         <Image
-          source={{ uri: pokemon.sprites.front_default }}
+          source={{ uri: pokemon.image }}
           style={styles.image}
           resizeMode="contain"
         />
@@ -30,15 +31,12 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           {formatPokemonId(pokemon.id)} {capitalize(pokemon.name)}
         </Text>
         <View style={styles.typeContainer}>
-          {pokemon.types.map((typeInfo, index) => (
+          {pokemon.types.map((type, index) => (
             <View
               key={index}
-              style={[
-                styles.typeTag,
-                { backgroundColor: getTypeColor(typeInfo.type.name) }
-              ]}
+              style={[styles.typeTag, { backgroundColor: getTypeColor(type) }]}
             >
-              <Text style={styles.typeText}>{typeInfo.type.name}</Text>
+              <Text style={styles.typeText}>{type}</Text>
             </View>
           ))}
         </View>

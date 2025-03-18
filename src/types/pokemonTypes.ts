@@ -2,45 +2,50 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ReactNode } from 'react';
 
-export interface Pokemon {
+export interface BasicPokemon {
+  id: number;
+  name: string;
+  image: string;
+  types: string[];
+}
+
+export interface PokemonDetail {
   id: number;
   name: string;
   height: number;
   weight: number;
-  types: { type: { name: string } }[];
+  types: Array<{
+    slot: number;
+    type: { name: string; url: string };
+  }>;
   sprites: {
     front_default: string;
     other: {
-      'official-artwork': {
-        front_default: string;
-      };
+      'official-artwork': { front_default: string };
     };
   };
-  stats: {
+  stats: Array<{
     base_stat: number;
-    stat: {
-      name: string;
-    };
-  }[];
-  moves: {
-    move: {
-      name: string;
-    };
-  }[];
+    stat: { name: string };
+  }>;
+  moves: Array<{ move: { name: string } }>;
 }
 
-export interface PokemonDetails {
-  weight: number;
-  height: number;
-  types: { type: { name: string } }[];
-  sprites: {
-    front_default: string;
-    other: { 'official-artwork': { front_default: string } };
-  };
+export interface PokemonContextType {
+  pokemonList: BasicPokemon[];
+  allPokemonList: BasicPokemon[];
+  loading: boolean;
+  error: string | null;
+  getPokemonDetails: (id: number) => Promise<PokemonDetail>;
+  currentPage: number;
+  totalPages: number;
+  nextPage: () => void;
+  previousPage: () => void;
+  setCurrentPage: (page: number) => void;
 }
 
 export interface PokemonCardProps {
-  pokemon: Pokemon;
+  pokemon: BasicPokemon;
   onPress: () => void;
 }
 
@@ -51,7 +56,7 @@ export interface PokemonDetailsProps {
 export type RootStackParamList = {
   PokemonScreen: undefined;
   PokemonDetails: {
-    pokemon: Pokemon;
+    pokemon: BasicPokemon;
   };
 };
 
@@ -64,13 +69,6 @@ export type PokemonDetailsRouteProp = RouteProp<
   RootStackParamList,
   'PokemonDetails'
 >;
-
-export interface PokemonContextType {
-  pokemons: Pokemon[];
-  fetchPokemons: () => Promise<void>;
-  loading: boolean;
-  error: string | null;
-}
 
 export interface PokemonProviderProps {
   children: ReactNode;

@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   safeArea: {
     flex: 1
   },
@@ -16,7 +21,8 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 10
+    paddingVertical: 10,
+    marginTop: 20
   },
   backButton: {
     marginRight: 10,
@@ -60,8 +66,7 @@ export default StyleSheet.create({
   },
   imageContainer: {
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 20
+    marginVertical: 20
   },
   pokemonImage: {
     width: 200,
@@ -74,7 +79,7 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 30,
     paddingBottom: 40,
-    minHeight: '100%'
+    minHeight: '60%'
   },
   typeContainer: {
     flexDirection: 'row',
@@ -101,13 +106,15 @@ export default StyleSheet.create({
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20
+    marginBottom: 20,
+    paddingHorizontal: 10
   },
   statItem: {
     flex: 1,
     alignItems: 'center'
   },
-  statIconContainer: {
+  statIcon: {
+    fontSize: 20,
     marginBottom: 5
   },
   statValue: {
@@ -130,14 +137,8 @@ export default StyleSheet.create({
   moveText: {
     fontSize: 14,
     fontWeight: '500',
-    marginBottom: 2
-  },
-  description: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 30
+    marginBottom: 2,
+    textAlign: 'center'
   },
   baseStatsContainer: {
     marginTop: 5
@@ -168,5 +169,32 @@ export default StyleSheet.create({
   },
   baseStatBar: {
     height: '100%'
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#eee'
+  },
+  paginationButton: {
+    padding: 10,
+    backgroundColor: '#D32F2F',
+    borderRadius: 5,
+    minWidth: 100,
+    alignItems: 'center'
+  },
+  paginationButtonDisabled: {
+    backgroundColor: '#ccc'
+  },
+  paginationButtonText: {
+    color: '#fff',
+    fontWeight: 'bold'
+  },
+  paginationText: {
+    fontSize: 16,
+    fontWeight: 'bold'
   }
 });
